@@ -3,24 +3,11 @@ import numpy as np
 from imblearn.over_sampling import SMOTE
 import sys
 
-#  text       background
-
-# 30 black    preto    40
-# 31 red      vermelho 41
-# 32 green    verde    42
-# 33 yellow   amarelo  43
-# 34 blue     azul     44
-# 35 Magenta  Magenta  45
-# 36 cyan     ciano    46
-# 37 grey     cinza    47
-# 97 white    branco   107
-
 
 def load_dataframe():
     df = pd.read_csv('./data/spambase.csv')
 
     labels = df['label'].to_numpy()
-    # remove coluna das labels
     df = df.drop('label', axis=1)
 
     return df, labels
@@ -52,6 +39,7 @@ def title(text):
         print('\n\n{}'.format(text.upper()))
         print('-'*len(text), end='\n\n')
 
+
 def header(text):
     if sys.platform.startswith('linux'):
         print('\033[1;31m-\033[0;34m=\033[1;31m-\033[0m' * 20)
@@ -68,7 +56,7 @@ def main():
 
     df, labels = load_dataframe()
 
-    best_labels = [
+    best_features = [
         "word_freq_you",
         "charfreq!",
         "capital_run_length_average",
@@ -76,16 +64,19 @@ def main():
         "capital_run_length_total"
     ]
 
-    title('Colunas')
-    print(df.info(memory_usage=False, verbose=True))
-
     title('Alguns dados')
-    print(df[best_labels].head())
+    print(df[best_features])
+
+    title('Quantidade de missing values por coluna')
+    print(df.isnull().sum())
 
     title('Análises sobre o algumas colunas')
-    print(df[best_labels].describe())
+    print(df[best_features].describe())
 
     balanced_df, balanced_labels = balance(df, labels)
+
+    title('Quantidade de linhas e colunas antes do balanceamento')
+    print(df.shape)
 
     title('Quantidade de linhas e colunas depois do balanceamento')
     print(balanced_df.shape)
@@ -93,10 +84,10 @@ def main():
     normalized_df = normalize(balanced_df)
 
     title('Alguns dados após a normalização por reescala linear')
-    print(normalized_df[best_labels].head())
+    print(normalized_df[best_features])
 
     title('Análises sobre os dados finais')
-    print(normalized_df[best_labels].describe())
+    print(normalized_df[best_features].describe())
 
 
 if __name__ == '__main__':
