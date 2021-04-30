@@ -1,16 +1,8 @@
 import pandas as pd
 import numpy as np
 from imblearn.over_sampling import SMOTE
-import sys
-
-
-def load_dataframe():
-    df = pd.read_csv('./data/spambase.csv')
-
-    labels = df['label'].to_numpy()
-    df = df.drop('label', axis=1)
-
-    return df, labels
+from style import header, title
+from utils import load_dataframe
 
 
 def normalize(df):
@@ -30,31 +22,10 @@ def balance(df, labels):
         df, labels)
 
 
-def title(text):
-    text = ' {} '.format(text)
-    if sys.platform.startswith('linux'):
-        print('\033[1;32m\n\n{}'.format(text.upper()))
-        print('-'*len(text), end='\n\n\033[m')
-    else:
-        print('\n\n{}'.format(text.upper()))
-        print('-'*len(text), end='\n\n')
-
-
-def header(text):
-    if sys.platform.startswith('linux'):
-        print('\033[1;31m-\033[0;34m=\033[1;31m-\033[0m' * 20)
-        print('\033[1;31m{:^60}\033[m'.format(text))
-        print('\033[1;31m-\033[0;34m=\033[1;31m-\033[0m' * 20)
-    else:
-        print('-=-' * 20)
-        print('{:^60}'.format(text))
-        print('-=-' * 20)
-
-
 def main():
     header('Leitura e análise do conjunto de dados SPAM')
 
-    df, labels = load_dataframe()
+    df, labels = load_dataframe('./data/spambase.csv')
 
     best_features = [
         "word_freq_you",
