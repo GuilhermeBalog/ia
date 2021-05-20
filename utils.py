@@ -1,5 +1,5 @@
 import pandas as pd
-from style import highlight
+from style import highlight, done
 
 def load_dataframe(path):
   dataframe_name = path.split('/')[-1]
@@ -8,5 +8,7 @@ def load_dataframe(path):
 
   labels = df['label'].to_numpy()
   df = df.drop('label', axis=1)
+
+  done()
 
   return df, labels
