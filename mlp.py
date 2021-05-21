@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from math import exp
 
 
@@ -11,7 +12,10 @@ def f(net):
 
 
 def df_dnet(f_net):
-    return (f_net * (1 - f_net))
+    result = []
+    for i in f_net:
+        result.append(i * (1 - i))
+    return result
 
 
 def random_weights_matrix(neurons, inputs):
@@ -63,8 +67,41 @@ def forward(model, sample):
     }
 
 
+def backpropagation(model, dataset, eta=0.1, treshold=0.001):
+    derivative_function = model["df"]
+    squared_error = 2 * treshold
+
+    counter = 0
+    while squared_error > treshold:
+        squared_error = 0
+
+        for i, row in dataset.iterrows():
+            xi = row[:model["input_length"]]
+            yi = row[model["input_length"]:]
+
+            results = forward(model, xi)
+
+            oi = results["f_net_output"]
+
+            error = []
+            total_squared_error = 0
+            for j in range(len(oi)):
+                error[j] = yi[j] - oi[j]
+                total_squared_error += error[j] ** 2
+
+            squared_error += total_squared_error
+
+            derivative_result = derivative_function(results["f_net_output"])
+            delta_oi = []
+            for j in range(len(error)):
+                delta_oi[j] = error[j] * derivative_result[j]
+
+    return
+
+
 if __name__ == '__main__':
     model = architecture()
+    df = pd.read_csv('./data/iris.csv')
 
-    result = forward(model, [1, 2])
-    print(result)
+    #result = forward(model, [1, 2])
+    # print(result)
